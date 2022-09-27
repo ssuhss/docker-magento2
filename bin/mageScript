@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker exec -it docker-magento2_php_1 ./michel.sh
