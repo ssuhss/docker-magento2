@@ -1,4 +1,6 @@
 .gitignore
 .idea
 /magento2-oqvestir
+.docker/elasticsearch/*
+.docker/mongo/*
 
