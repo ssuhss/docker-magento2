@@ -1,9 +1,8 @@
-FROM php:7.4.28-fpm
+FROM php:8.1.5-fpm
 
 COPY --from=composer:2.2.9 /usr/bin/composer /usr/local/bin/composer
 
 RUN pecl install xdebug && docker-php-ext-enable xdebug
-COPY xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 RUN apt-get update && apt-get upgrade -y
 
@@ -31,6 +30,7 @@ RUN apt-get install -y \
             zip \
       && docker-php-ext-install zip
 
+COPY xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 WORKDIR /app/code/
 CMD ["php-fpm"]

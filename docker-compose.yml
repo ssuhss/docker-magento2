@@ -14,6 +14,8 @@ services:
       - ~/.ssh/known_hosts:/var/www/.ssh/known_hosts:cached
       - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/magento2.conf:cached
       - ./magento2-oqvestir:/app/code
+      #- ./magento245:/app/code
+
     networks:
       magento2_oqvestir:
         aliases:
@@ -42,7 +44,7 @@ services:
     volumes:
       - ./.docker/db/_data:/var/lib/mysql
       #- /home/michel_silva/Documentos/Dev/mariadb_data:/var/lib/mysql
-      #- /home/michel_silva/Documentos/Dev/MAGE2/DUMP:/dump
+      - /home/michel_silva/Documentos/Dev/MAGE2/DUMP:/dump
     networks:
       - magento2_oqvestir
 
