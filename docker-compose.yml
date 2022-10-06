@@ -13,12 +13,13 @@ services:
       - ~/.ssh/id_rsa:/var/www/.ssh/id_rsa:cached
       - ~/.ssh/known_hosts:/var/www/.ssh/known_hosts:cached
       - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/magento2.conf:cached
-      - ./magento2-oqvestir:/app/code
+      - ./magento-welt:/app/code
       #- ./magento245:/app/code
 
     networks:
       magento2_oqvestir:
         aliases:
+          - local-welt.shop2gether.com.br
           - local.m2.oqvestir.com.br
           - local.m2.shop2gether.com.br
           - local.m2.2collab.com.br
@@ -29,8 +30,8 @@ services:
     expose:
       - 9000
     volumes:
-      - ./magento2-oqvestir:/app/code
-      - ./magento2-oqvestir/auth.json:/usr/local/.composer/auth.json
+      - ./magento-welt:/app/code
+      - ./magento-welt/auth.json:/usr/local/.composer/auth.json
       - ./.docker/php/php.ini-development:/usr/local/etc/php/conf.d/php.ini
     networks:
       - magento2_oqvestir
