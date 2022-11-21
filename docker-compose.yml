@@ -3,6 +3,8 @@ version: "2.2"
 services:
 
   nginx:
+    depends_on:
+      - php
     build:
       context: ./.docker/nginx
     ports:
@@ -12,16 +14,19 @@ services:
       - ~/.composer:/var/www/.composer:cached
       - ~/.ssh/id_rsa:/var/www/.ssh/id_rsa:cached
       - ~/.ssh/known_hosts:/var/www/.ssh/known_hosts:cached
-      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/magento2.conf:cached
-      - ./magento2-oqvestir:/app/code
-      #- ./magento245:/app/code
-
+      - ./.docker/nginx/nginx-oqv.conf:/etc/nginx/conf.d/magento2-oqv.conf:cached
+      - ./.docker/nginx/nginx-s2g.conf:/etc/nginx/conf.d/magento2-s2g.conf:cached
+      - ./magento245-oqv:/app/code/oqv/
+      - ./magento245-s2g:/app/code/s2g/
+    
     networks:
       magento2_oqvestir:
         aliases:
           - local.m2.oqvestir.com.br
           - local.m2.shop2gether.com.br
           - local.m2.2collab.com.br
+          - magento245-dev.shop2gether.com.br
+          - magento245-dev.oqvestir.com.br
 
   php:
     build:
@@ -29,8 +34,9 @@ services:
     expose:
       - 9000
     volumes:
-      - ./magento2-oqvestir:/app/code
-      - ./magento2-oqvestir/auth.json:/usr/local/.composer/auth.json
+      - ./magento245-oqv:/app/code/oqv/
+      - ./magento245-s2g:/app/code/s2g/
+      - ./magento245-oqv/auth.json:/usr/local/.composer/auth.json
       - ./.docker/php/php.ini-development:/usr/local/etc/php/conf.d/php.ini
     networks:
       - magento2_oqvestir
@@ -43,8 +49,7 @@ services:
     env_file: ./.docker/db/db.env
     volumes:
       - ./.docker/db/_data:/var/lib/mysql
-      #- /home/michel_silva/Documentos/Dev/mariadb_data:/var/lib/mysql
-      - /home/michel_silva/Documentos/Dev/MAGE2/DUMP:/dump
+      - ./.docker/db/dump:/dump
     networks:
       - magento2_oqvestir
 
@@ -65,10 +70,10 @@ services:
   elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
     environment:
-      - xpack.security.enabled=false
-      - "discovery.type=single-node"
-    volumes:
-      - "./.docker/elasticsearch/_data:/usr/share/elasticsearch/data"
+      ES_JAVA_OPTS: "-Xms750m -Xmx750m"
+      # - xpack.security.enabled=false
+        # - "discovery.type=single-node"
+        # ES_JAVA_OPTS: "-Xms750m -Xmx750m"  
     ports:
       - 9200:9200
     networks:
