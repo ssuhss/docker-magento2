@@ -14,19 +14,13 @@ services:
       - ~/.composer:/var/www/.composer:cached
       - ~/.ssh/id_rsa:/var/www/.ssh/id_rsa:cached
       - ~/.ssh/known_hosts:/var/www/.ssh/known_hosts:cached
-      - ./.docker/nginx/nginx-oqv.conf:/etc/nginx/conf.d/magento2-oqv.conf:cached
-      - ./.docker/nginx/nginx-s2g.conf:/etc/nginx/conf.d/magento2-s2g.conf:cached
-      - ./magento245-oqv:/app/code/oqv/
-      - ./magento245-s2g:/app/code/s2g/
+      - ./.docker/nginx/config/nginx.conf:/etc/nginx/conf.d/magento2.conf:cached
+      - ./magento2:/app/code/magento2/
     
     networks:
-      magento2_oqvestir:
+      magento2_network:
         aliases:
-          - local.m2.oqvestir.com.br
-          - local.m2.shop2gether.com.br
-          - local.m2.2collab.com.br
-          - magento245-dev.shop2gether.com.br
-          - magento245-dev.oqvestir.com.br
+          - local.m2.com.br
 
   php:
     build:
@@ -34,12 +28,11 @@ services:
     expose:
       - 9000
     volumes:
-      - ./magento245-oqv:/app/code/oqv/
-      - ./magento245-s2g:/app/code/s2g/
-      - ./magento245-oqv/auth.json:/usr/local/.composer/auth.json
+      - ./magento2:/app/code/magento2/
+      - ./magento2/auth.json:/usr/local/.composer/auth.json
       - ./.docker/php/php.ini-development:/usr/local/etc/php/conf.d/php.ini
     networks:
-      - magento2_oqvestir
+      - magento2_network
 
   db:
     image: mariadb:10.4
@@ -51,33 +44,31 @@ services:
       - ./.docker/db/_data:/var/lib/mysql
       - ./.docker/db/dump:/dump
     networks:
-      - magento2_oqvestir
+      - magento2_network
 
   rabbitmq:
     image: rabbitmq:3.8.8-management
     ports:
       - "15672:15672"
     networks:
-      - magento2_oqvestir
+      - magento2_network
 
   redis:
     image: redis
     ports:
       - "6379"
     networks:
-      - magento2_oqvestir
+      - magento2_network
 
   elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
     environment:
-      ES_JAVA_OPTS: "-Xms750m -Xmx750m"
-      # - xpack.security.enabled=false
-        # - "discovery.type=single-node"
-        # ES_JAVA_OPTS: "-Xms750m -Xmx750m"  
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - 9200:9200
     networks:
-      - magento2_oqvestir
+      - magento2_network
 
   mongodb:
     image: mongo
@@ -89,7 +80,7 @@ services:
     ports:
         - 27017:27017
     networks:
-      - magento2_oqvestir
+      - magento2_network
 
   mailhog:
     image: mailhog/mailhog
@@ -97,8 +88,8 @@ services:
       - 1025:1025
       - 8025:8025
     networks:
-      - magento2_oqvestir
+      - magento2_network
 
 networks:
-  magento2_oqvestir:
+  magento2_network:
     driver: bridge
