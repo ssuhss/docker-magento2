@@ -14,7 +14,7 @@ services:
       - ~/.composer:/var/www/.composer:cached
       - ~/.ssh/id_rsa:/var/www/.ssh/id_rsa:cached
       - ~/.ssh/known_hosts:/var/www/.ssh/known_hosts:cached
-      - ./.docker/nginx/config/nginx.conf:/etc/nginx/conf.d/magento2.conf:cached
+      - ./.docker/nginx/Config/nginx.conf:/etc/nginx/conf.d/magento2.conf:cached
       - ./magento2:/app/code/magento2/
     
     networks:
@@ -50,6 +50,9 @@ services:
     image: rabbitmq:3.8.8-management
     ports:
       - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
     networks:
       - magento2_network
 
@@ -84,6 +87,8 @@ services:
 
   mailhog:
     image: mailhog/mailhog
+    logging:
+      driver: 'none'
     ports:
       - 1025:1025
       - 8025:8025

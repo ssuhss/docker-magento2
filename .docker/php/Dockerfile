@@ -32,7 +32,7 @@ RUN apt-get install -y \
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-WORKDIR /app/code/
+WORKDIR /app/code/magento2/
 CMD ["php-fpm"]
 
 EXPOSE 9000

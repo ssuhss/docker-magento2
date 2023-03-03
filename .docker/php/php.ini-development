@@ -406,7 +406,7 @@ max_input_time = 600
 
 ; Maximum amount of memory a script may consume
 ; http://php.net/memory-limit
-memory_limit = 512M
+memory_limit = 2G
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Error handling and logging ;
@@ -843,7 +843,7 @@ file_uploads = On
 
 ; Maximum allowed size for uploaded files.
 ; http://php.net/upload-max-filesize
-upload_max_filesize = 2M
+upload_max_filesize = 10M
 
 ; Maximum number of files that can be uploaded via a single request
 max_file_uploads = 20
@@ -1067,9 +1067,9 @@ pdo_mysql.default_socket=
 [mail function]
 ; For Win32 only.
 ; http://php.net/smtp
-SMTP = localhost
+SMTP = mailhog
 ; http://php.net/smtp-port
-smtp_port = 25
+smtp_port = 1025
 
 ; For Win32 only.
 ; http://php.net/sendmail-from
